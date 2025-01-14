@@ -1,11 +1,19 @@
-// Import the VS Code API
 import * as vscode from 'vscode';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 export function activate(context: vscode.ExtensionContext) {
     console.log('Your extension is now active!');
+
+    const apiUrl = process.env.API_URL ?? 'http://localhost:5000';
+
+    if (!apiUrl) {
+        vscode.window.showErrorMessage('API URL is not configured.');
+    }
 
     // Register a command for the extension
     const disposable = vscode.commands.registerCommand('extension.processSelectedCode', async () => {
@@ -36,7 +44,6 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         // Call the external API with the selected text and action
-        const apiUrl = 'https://your-api-endpoint.com/process'; // Replace with your API URL
         const requestData = {
             action: selectedOption,
             code: selectedText,
